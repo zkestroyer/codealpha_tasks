@@ -1,0 +1,32 @@
+The goal of this project was to create a minimal web-based file upload service using Python and Flask that supports secure image uploads. During development, I conducted a security-oriented code review to identify and fix potential vulnerabilities often found in similar applications.
+
+1  Unvalidated file extensions	High	Allowed only specific image extensions like .jpg, .png, .gif.
+2  MIME type spoofing	        High	Used python-magic to verify uploaded files are actually images based on content.
+3  Path traversal via filename	Medium	Filenames are passed through secure_filename() from Werkzeug.
+4  Missing upload folder protection Medium	Ensured uploads/ folder exists and only serves requested files.
+5  Exposing sensitive stack traces  Medium	Removed debug=True in production setup.
+6  Unrestricted file access	Medium	Checked for file existence before serving, used secure file path.
+
+Static Code Analysis
+Tool used: bandit — Python security linter
+Command: bandit -r 
+
+Resolution:
+Disabled debug mode for production (app.run(debug=False))
+
+Best Practices Implemented:
+Input validation on both filename and MIME type
+File storage path locked to controlled folder
+Secure file naming
+Avoided use of eval, pickle, or other dangerous functions
+Minimal third-party dependencies
+Comments added for maintainability
+
+This project helped me deepen my understanding of web application security — especially around file uploads, a commonly exploited attack surface. By combining secure coding techniques with static analysis tools like Bandit, I ensured the app follows OWASP Top 10 principles such as:
+
+A5: Broken Access Control – Fixed with strict file access paths
+
+A1: Injection – No dynamic evals or command executions
+
+A4: Insecure Design – Enforced MIME type checks & file type validation
+
